@@ -72,7 +72,7 @@ class TSIIndicator(IndicatorMixin):
         self._s = s
         self._fillna = fillna
         self._run()
-
+         
     def _run(self):
         m = self._close - self._close.shift(1)
         min_periods_r = 0 if self._fillna else self._r
@@ -83,7 +83,7 @@ class TSIIndicator(IndicatorMixin):
             span=self._s, min_periods=min_periods_s, adjust=False).mean()
         self._tsi = m1 / m2
         self._tsi *= 100
-
+         
     def tsi(self) -> pd.Series:
         """True strength index (TSI)
 
@@ -92,6 +92,21 @@ class TSIIndicator(IndicatorMixin):
         """
         tsi = self._check_fillna(self._tsi, value=0)
         return pd.Series(tsi, name='tsi')
+
+    def _run(self):
+        
+        tsi_smoth = tsi.ewm(span=self._s, min_periods=min_periods_s, adjust=False).mean()
+      
+    def tsi_smoth(self) -> pd.Series:
+        """True strength Smoth index (TSI)
+
+        Returns:
+            pandas.Series: New feature generated.
+        """
+        tsi_smoth = self._check_fillna(self._tsi, value=0)
+        return pd.Series(tsi_smoth, name='tsi_smoth')
+
+    
 
 
 class UltimateOscillator(IndicatorMixin):
